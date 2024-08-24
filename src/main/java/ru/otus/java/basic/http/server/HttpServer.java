@@ -1,11 +1,7 @@
 package ru.otus.java.basic.http.server;
 
-import ru.otus.java.basic.http.server.processors.AnotherHelloWorldRequestProcessor;
-import ru.otus.java.basic.http.server.processors.HelloWorldRequestProcessor;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
