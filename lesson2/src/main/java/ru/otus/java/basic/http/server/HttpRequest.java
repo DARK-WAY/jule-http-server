@@ -1,5 +1,8 @@
 package ru.otus.java.basic.http.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +11,7 @@ public class HttpRequest {
     private String uri;
     private HttpMethod method;
     private Map<String, String> parameters;
+    private Map<String, String> headers;
     private String body;
 
     public String getRoutingKey() {
@@ -21,6 +25,8 @@ public class HttpRequest {
     public String getBody() {
         return body;
     }
+
+    private final Logger logger = LogManager.getLogger(this.getClass().getName());
 
     public HttpRequest(String rawRequest) {
         this.rawRequest = rawRequest;
@@ -47,6 +53,40 @@ public class HttpRequest {
                     rawRequest.indexOf("\r\n\r\n") + 4
             );
         }
+
+        this.headers= new HashMap<>();
+        int startpos = rawRequest.indexOf("\r\n", 0) + 2;
+        int beginHeader = rawRequest.indexOf("\r\n", startpos);
+        int endHeader = rawRequest.indexOf("\r\n\r\n");
+
+        while (beginHeader > 0 && beginHeader < endHeader) {
+
+            String strHeader = rawRequest.substring(startpos, beginHeader);
+            int keyvalue = strHeader.indexOf(':');
+            if (keyvalue > 0) {
+                String headersKey = strHeader.substring(0, keyvalue);
+                if (headersKey == null) headersKey = "";
+
+                String headersValue = strHeader.substring(keyvalue + 1, strHeader.length()).trim();
+                if (headersValue == null) headersValue = "";
+                this.headers.put(headersKey, headersValue);
+            }
+            startpos = beginHeader + 2;
+            beginHeader = rawRequest.indexOf("\r\n", startpos + 2);
+
+        }
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getHeader(String key) {
+        return headers.get(key);
+    }
+
+    public boolean containsHeader(String key) {
+        return headers.containsKey(key);
     }
 
     public boolean containsParameter(String key) {
@@ -57,12 +97,11 @@ public class HttpRequest {
         return parameters.get(key);
     }
 
-    public void printInfo(boolean showRawRequest) {
-        System.out.println("uri: " + uri);
-        System.out.println("method: " + method);
-        System.out.println("body: " + body);
-        if (showRawRequest) {
-            System.out.println(rawRequest);
-        }
+    public void logInfo() {
+        logger.info("uri: " + uri);
+        logger.info("method: " + method);
+        logger.info("body: " + body);
+        logger.debug("headers:\r\n" + headers.toString());
+        logger.debug("rawRequest:\r\n" + rawRequest);
     }
 }
