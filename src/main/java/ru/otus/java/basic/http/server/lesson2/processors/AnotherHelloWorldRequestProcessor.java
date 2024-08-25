@@ -1,4 +1,4 @@
-package ru.otus.java.basic.http.server.processors;
+package ru.otus.java.basic.http.server.lesson2.processors;
 
 import ru.otus.java.basic.http.server.HttpRequest;
 

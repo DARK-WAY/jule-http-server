@@ -1,7 +1,4 @@
-package ru.otus.java.basic.http.server;
-
-import ru.otus.java.basic.http.server.processors.AnotherHelloWorldRequestProcessor;
-import ru.otus.java.basic.http.server.processors.HelloWorldRequestProcessor;
+package ru.otus.java.basic.http.server.lesson;
 
 import java.io.IOException;
 import java.net.ServerSocket;
